@@ -12,20 +12,20 @@ function App() {
   }
 
   function completeTodo(id) {
-    const updatedTodos = [...todoList];
-    todoList.map((todo, index) => {
+    const updatedTodos = todoList.map((todo) => {
       if (todo.id === id) {
-        updatedTodos.splice(index, 1, { ...todo, isCompleted: true });
-        setTodoList([...updatedTodos]);
+        return { ...todo, isCompleted: true };
+      } else {
+        return todo;
       }
     });
+    setTodoList(updatedTodos);
   }
 
   return (
     <div>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={handleAddTodo} />
-      {!todoList.length > 0 && <p>Add a todo above to get started</p>}
       <TodoList
         todoList={todoList}
         setTodoList={setTodoList}

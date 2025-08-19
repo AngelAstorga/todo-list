@@ -22,7 +22,7 @@ function TodoForm({ onAddTodo }) {
         value={workingTodoTitle}
         onChange={(e) => setWorkingTodoTitle(e.target.value)}
       />
-      <button disabled={workingTodoTitle === ''}> Add Todo</button>
+      <button disabled={workingTodoTitle.trim() === ''}> Add Todo</button>
     </form>
   );
 }
