@@ -1,5 +1,6 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import style from './App.module.css';
+import { useEffect, useState, useCallback } from 'react';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm/TodoViewForm';
@@ -199,7 +200,7 @@ function App() {
     }
   }
   return (
-    <div>
+    <div className={style.AppWrapper}>
       <h1>My Todos</h1>
       <TodoForm onAddTodo={handleAddTodo} isSaving={isSaving} />
       <TodoList
@@ -212,7 +213,7 @@ function App() {
       {errorMessage != '' && (
         <>
           <hr />
-          <p>{errorMessage}</p>
+          <p className={style.ErrorMessage}>{errorMessage}</p>
           <button
             onClick={() => {
               setErrorMessage('');

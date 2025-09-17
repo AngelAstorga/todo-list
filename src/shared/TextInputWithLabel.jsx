@@ -1,3 +1,4 @@
+import StyledTextInputWithLabel from './TextInputWithLabel.styled';
 export default function TextInputWithLabel({
   elementId,
   ref,
@@ -8,7 +9,7 @@ export default function TextInputWithLabel({
   return (
     <>
       <label htmlFor={elementId}>{labelText}</label>
-      <input
+      <StyledTextInputWithLabel
         type="text"
         ref={ref}
         id={elementId}

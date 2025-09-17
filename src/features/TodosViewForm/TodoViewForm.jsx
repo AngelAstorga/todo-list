@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import StyledTodosViewForm from './TodosViewForm.styled';
 export default function TodosViewForm({
   sortDirection,
   setSortDirection,
@@ -7,7 +9,7 @@ export default function TodosViewForm({
   setQueryString,
 }) {
   return (
-    <form
+    <StyledTodosViewForm
       onSubmit={(e) => {
         e.preventDefault();
       }}
@@ -41,6 +43,6 @@ export default function TodosViewForm({
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
       </select>
-    </form>
+    </StyledTodosViewForm>
   );
 }
