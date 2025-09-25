@@ -1,7 +1,7 @@
 const actions = {
   fetchTodos: 'fetchTodos',
   loadTodos: 'loadTodos',
-  setLoadError: 'setLoadError',
+  errorMessage: 'errorMessage',
   startRequest: 'startRequest',
   addTodo: 'addTodo',
   endRequest: 'endRequest',
@@ -22,42 +22,97 @@ function reducer(state = initialState, action) {
     case actions.fetchTodos:
       return {
         ...state,
+        isLoading: true,
       };
-    case actions.loadTodos:
+    case actions.loadTodos: {
+      const fetchedExamples = action.records.map((record) => {
+        const todo = {
+          id: record.id,
+          ...record.fields,
+        };
+
+        if (!todo.isCompleted) {
+          todo.isCompleted = false;
+        }
+
+        return todo;
+      });
       return {
         ...state,
+        todoList: [...fetchedExamples],
       };
-    case actions.setLoadError:
+    }
+    case actions.errorMessage:
       return {
         ...state,
+        errorMessage: action.errorMessage,
+        isLoading: false,
       };
     case actions.startRequest:
       return {
         ...state,
+        isSaving: true,
       };
-    case actions.addTodo:
+    case actions.addTodo: {
+      const savedTodo = {
+        id: action.records[0].id,
+        title: action.records[0].fields.title,
+      };
+      console.log(savedTodo);
+      if (!action.records[0].fields.isCompleted) {
+        savedTodo.isCompleted = false;
+      }
       return {
         ...state,
+        todoList: [...state.todoList, savedTodo],
+        isSaving: false,
       };
+    }
     case actions.endRequest:
       return {
         ...state,
+        isLoading: false,
+        isSaving: false,
       };
-    case actions.updateTodo:
+    case actions.updateTodo: {
       return {
         ...state,
+        todoList: [...action.updatedTodos],
       };
-    case actions.completeTodo:
+    }
+
+    case actions.completeTodo: {
+      const originalTodo = state.todoList.find((todo) => todo.id == action.id);
+      const updatedTodos = state.todoList.map((todo) => {
+        if (todo.id === action.id) {
+          return { ...todo, isCompleted: !originalTodo.isCompleted };
+        } else {
+          return todo;
+        }
+      });
       return {
         ...state,
+        todoList: updatedTodos,
       };
-    case actions.revertTodo:
+    }
+    case actions.revertTodo: {
+      const originalTodo = action.todoList.find((todo) => todo.id == action.id);
+      const updatedTodos = action.todoList.map((todo) => {
+        if (todo.id === action.id) {
+          return { ...todo, isCompleted: originalTodo.isCompleted };
+        } else {
+          return todo;
+        }
+      });
       return {
         ...state,
+        todoList: [...updatedTodos],
       };
+    }
     case actions.clearError:
       return {
         ...state,
+        errorMessage: '',
       };
     default:
       return {
@@ -66,4 +121,4 @@ function reducer(state = initialState, action) {
   }
 }
 
-export { initialState, actions };
+export { initialState, actions, reducer };
