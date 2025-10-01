@@ -1,9 +1,16 @@
 import './App.css';
 import style from './App.module.css';
 import { useEffect, useState, useCallback, useReducer } from 'react';
+import { useLocation, Routes, Route } from 'react-router';
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 import TodosViewForm from './features/TodosViewForm/TodoViewForm';
+import Shared from './shared/shared';
+import TodosPage from './pages/TodosPage';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
+import { Navigate } from 'react-router';
+
 import {
   reducer as todosReducer,
   actions as todoActions,
@@ -26,7 +33,14 @@ function App() {
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
   const [queryString, setQueryString] = useState('');
+  const [title, setTitle] = useState('');
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setTitle(location.pathname);
+  }, [location]);
 
   async function handleAddTodo(title) {
     const newTodo = { title: title, isCompleted: false };
@@ -181,36 +195,30 @@ function App() {
   }
   return (
     <div className={style.AppWrapper}>
-      <h1>My Todos</h1>
-      <TodoForm onAddTodo={handleAddTodo} isSaving={todoState.isSaving} />
-      <TodoList
-        todoList={todoState.todoList}
-        onCompleteTodo={completeTodo}
-        onUpdateTodo={updateTodo}
-        isLoading={todoState.isLoading}
-      />
-      {todoState.errorMessage != '' && (
-        <>
-          <hr />
-          <p className={style.ErrorMessage}>{todoState.errorMessage}</p>
-          <button
-            onClick={() => {
-              dispatch({ type: todoActions.errorMessage, errorMessage: '' });
-            }}
-          >
-            dismiss
-          </button>
-        </>
-      )}
-      <hr />
-      <TodosViewForm
-        sortDirection={sortDirection}
-        setSortDirection={setSortDirection}
-        sortField={sortField}
-        setSortField={setSortField}
-        queryString={queryString}
-        setQueryString={setQueryString}
-      />
+      <Shared title={title} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <TodosPage
+              todoState={todoState}
+              handleAddTodo={handleAddTodo}
+              completeTodo={completeTodo}
+              updateTodo={updateTodo}
+              todoActions={todoActions}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+              sortField={sortField}
+              setSortField={setSortField}
+              queryString={queryString}
+              setQueryString={setQueryString}
+              dispatch={dispatch}
+            />
+          }
+        ></Route>
+        <Route path="/about" element={<About />}></Route>
+        <Route path="*" element={<NotFound />}></Route>
+      </Routes>
     </div>
   );
 }
