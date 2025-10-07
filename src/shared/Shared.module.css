@@ -1,0 +1,20 @@
+.active {
+  text-decoration: none;
+  color: white;
+}
+.inactive {
+  text-shadow: none;
+  text-decoration: none;
+  color: gray;
+}
+h1 {
+  text-align: center;
+}
+.a {
+  font-size: 23px;
+}
+.nav {
+  display: flex;
+  column-gap: 15px;
+  justify-content: center;
+}

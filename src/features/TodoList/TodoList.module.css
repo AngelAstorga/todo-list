@@ -3,3 +3,10 @@
   list-style: none;
   padding: 0px;
 }
+.paginationUList {
+  list-style: none;
+  display: flex;
+  column-gap: 15px;
+  color: white;
+  justify-content: center;
+}
