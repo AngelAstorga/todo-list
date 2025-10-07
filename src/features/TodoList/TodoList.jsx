@@ -9,7 +9,12 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const indexOfFirstTodo = (currentPage - 1) * 15;
   const totalPages = Math.ceil(filteredTodoList.length / itemsPerPage);
+  const filteredTodoListAux = filteredTodoList.slice(
+    indexOfFirstTodo,
+    indexOfFirstTodo + 15
+  );
   const navigate = useNavigate();
+
   useEffect(() => {
     if (totalPages > 0) {
       if (
@@ -24,12 +29,13 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      setSearchParams(currentPage - 1);
+      setSearchParams({ page: currentPage - 1 });
     }
   };
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setSearchParams(currentPage - 1);
+      console.log('nextpage');
+      setSearchParams({ page: currentPage + 1 });
     }
   };
 
@@ -41,7 +47,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
       ) : (
         <div>
           <ul className={style.List}>
-            {filteredTodoList.map((todo) => (
+            {filteredTodoListAux.map((todo) => (
               <TodoListItem
                 key={todo.id}
                 todo={todo}
@@ -55,7 +61,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
               <li>
                 <button
                   onClick={() => {
-                    handlePreviousPage;
+                    handlePreviousPage();
                   }}
                   disabled={currentPage === 1}
                 >
@@ -68,7 +74,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
               <li>
                 <button
                   onClick={() => {
-                    handleNextPage;
+                    handleNextPage();
                   }}
                   disabled={currentPage == totalPages}
                 >
